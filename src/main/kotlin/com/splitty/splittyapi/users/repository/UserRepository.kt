@@ -4,21 +4,21 @@ import com.splitty.splittyapi.users.entity.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import java.util.Optional
-import java.util.UUID
+import java.util.*
 
 @Repository
 interface UserRepository : JpaRepository<User, Long> {
 
-    fun findByEmail(email: String): Optional<User>
+    fun findByCodeAndActive(code: UUID, active: Boolean): Optional<User>
 
-    fun findByCode(code: UUID): Optional<User>
+    fun findByEmailAndActive(email: String, active: Boolean): Optional<User>
 
-    @Transactional
+    fun existsByCodeAndActive(code: UUID, active: Boolean): Boolean
+
     @Modifying
-    @Query("UPDATE User u SET u.active = false WHERE u.id = :id")
-    fun disable(@Param("id") id: Long)
+    @Transactional
+    @Query("UPDATE User u SET u.active = false WHERE u.code = :code")
+    fun disable(code: UUID)
 }

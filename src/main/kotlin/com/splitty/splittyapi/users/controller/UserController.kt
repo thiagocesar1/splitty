@@ -1,6 +1,9 @@
 package com.splitty.splittyapi.users.controller
 
 import com.splitty.splittyapi.users.dto.CreateUserRequest
+import com.splitty.splittyapi.users.dto.LoginRequest
+import com.splitty.splittyapi.users.dto.UpdatePasswordRequest
+import com.splitty.splittyapi.users.dto.UpdateUserRequest
 import com.splitty.splittyapi.users.dto.UserResponse
 import com.splitty.splittyapi.users.service.UserService
 import org.springframework.http.HttpStatus
@@ -38,9 +41,33 @@ class UserController(
         return ResponseEntity.ok(user)
     }
 
-    @PatchMapping("/{id}/disable")
-    fun disableUser(@PathVariable id: Long): ResponseEntity<Unit> {
-        userService.disableUser(id)
+    @PatchMapping("/code/{code}/disable")
+    fun disableUser(@PathVariable code: String): ResponseEntity<Unit> {
+        userService.disableUserByCode(UUID.fromString(code))
+        return ResponseEntity.noContent().build()
+    }
+
+    @PostMapping("/login")
+    fun login(@RequestBody request: LoginRequest): ResponseEntity<UserResponse> {
+        val user = userService.login(request)
+        return ResponseEntity.ok(user)
+    }
+
+    @PutMapping("/code/{code}")
+    fun updateUser(
+        @PathVariable code: String,
+        @RequestBody request: UpdateUserRequest
+    ): ResponseEntity<UserResponse> {
+        val user = userService.updateUser(UUID.fromString(code), request)
+        return ResponseEntity.ok(user)
+    }
+
+    @PutMapping("/code/{code}/password")
+    fun updatePassword(
+        @PathVariable code: String,
+        @RequestBody request: UpdatePasswordRequest
+    ): ResponseEntity<Unit> {
+        userService.updatePassword(UUID.fromString(code), request)
         return ResponseEntity.noContent().build()
     }
 }
