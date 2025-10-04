@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: splittyapi
+  datasource:
+    url: jdbc:postgresql://localhost:5432/splitty-db
+    username: splitty_admin
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
