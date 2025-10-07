@@ -2,10 +2,12 @@ package com.splitty.splittyapi.common.handler
 
 import com.splitty.splittyapi.common.dto.ErrorResponse
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import java.util.NoSuchElementException
 
 @ControllerAdvice
@@ -48,6 +50,34 @@ class GlobalExceptionHandler {
             status = HttpStatus.BAD_REQUEST.value(),
             error = "Bad Request",
             message = ex.message ?: "Invalid argument",
+            path = request.requestURI
+        )
+        return ResponseEntity(error, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException::class)
+    fun handleDataIntegrityViolationException(
+        ex: DataIntegrityViolationException,
+        request: HttpServletRequest
+    ): ResponseEntity<ErrorResponse> {
+        val error = ErrorResponse(
+            status = HttpStatus.CONFLICT.value(),
+            error = "Conflict",
+            message = "Data integrity violation - possible duplicate or constraint violation",
+            path = request.requestURI
+        )
+        return ResponseEntity(error, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException::class)
+    fun handleMethodArgumentTypeMismatchException(
+        ex: MethodArgumentTypeMismatchException,
+        request: HttpServletRequest
+    ): ResponseEntity<ErrorResponse> {
+        val error = ErrorResponse(
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = "Bad Request",
+            message = "Invalid parameter format: ${ex.name}",
             path = request.requestURI
         )
         return ResponseEntity(error, HttpStatus.BAD_REQUEST)
