@@ -44,13 +44,13 @@ class GroupController(
         return ResponseEntity.ok(group.toResponse(creator))
     }
 
-    @PutMapping("/{code}/disable")
+    @DeleteMapping("/{code}")
     fun disableGroup(@PathVariable code: UUID): ResponseEntity<Void> {
         groupService.disableGroup(code)
         return ResponseEntity.noContent().build()
     }
 
-    @PutMapping("/{code}/enable")
+    @PatchMapping("/{code}/enable")
     fun enableGroup(@PathVariable code: UUID): ResponseEntity<Void> {
         groupService.enableGroup(code)
         return ResponseEntity.noContent().build()
@@ -78,9 +78,8 @@ class GroupController(
     fun getGroupMembers(@PathVariable groupCode: UUID): ResponseEntity<List<GroupMemberResponse>> {
         val members = groupService.getGroupMembersByCode(groupCode)
         return ResponseEntity.ok(members.map { member ->
-            val group = groupService.getGroupById(member.groupId)
             val user = groupService.getUserById(member.userId)
-            member.toResponse(group, user)
+            member.toResponse(user)
         })
     }
 

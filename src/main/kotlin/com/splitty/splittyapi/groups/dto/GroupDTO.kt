@@ -1,5 +1,6 @@
 package com.splitty.splittyapi.groups.dto
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.splitty.splittyapi.groups.entity.GroupRole
 
 data class CreateGroupRequest(
@@ -30,8 +31,9 @@ data class GroupResponse(
     val active: Boolean
 )
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class GroupMemberResponse(
-    val groupCode: String,
+    val groupCode: String?,
     val userCode: String,
     val role: GroupRole,
     val joinedAt: String,

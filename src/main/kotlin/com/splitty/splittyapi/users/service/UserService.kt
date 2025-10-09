@@ -1,5 +1,6 @@
 package com.splitty.splittyapi.users.service
 
+import com.splitty.splittyapi.groups.service.GroupService
 import com.splitty.splittyapi.users.dto.CreateUserRequest
 import com.splitty.splittyapi.users.dto.LoginRequest
 import com.splitty.splittyapi.users.dto.UpdatePasswordRequest
@@ -15,7 +16,8 @@ import java.util.*
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val groupService: GroupService
 ) {
     fun createUser(request: CreateUserRequest): UserResponse {
         val user = request.toEntity().copy(
@@ -46,6 +48,7 @@ class UserService(
         if (!userRepository.existsByCodeAndActive(code, true)) {
             throw NoSuchElementException("User not found")
         }
+        groupService.disableUserFromGroups(code);
         userRepository.disable(code)
     }
 

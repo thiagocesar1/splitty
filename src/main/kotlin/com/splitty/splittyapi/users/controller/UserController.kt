@@ -41,7 +41,7 @@ class UserController(
         return ResponseEntity.ok(user)
     }
 
-    @PatchMapping("/code/{code}/disable")
+    @DeleteMapping("/code/{code}")
     fun disableUser(@PathVariable code: String): ResponseEntity<Unit> {
         userService.disableUserByCode(UUID.fromString(code))
         return ResponseEntity.noContent().build()

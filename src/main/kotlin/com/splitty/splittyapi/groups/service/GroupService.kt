@@ -131,6 +131,13 @@ class GroupService(
         return groupMemberRepository.findByUserIdAndActive(user.id!!, true)
     }
 
+    fun disableUserFromGroups(userCode: UUID) {
+        val groupMemebers = getUserGroupsByCode(userCode);
+        groupMemebers.forEach { member ->
+            groupMemberRepository.deactivateGroupMember(member.groupId, member.userId)
+        }
+    }
+
     fun getGroupOwnersByCode(groupCode: UUID): List<GroupMember> {
         val group = findGroupByCode(groupCode)
         return groupMemberRepository.findByGroupIdAndRole(group.id!!, GroupRole.OWNER)

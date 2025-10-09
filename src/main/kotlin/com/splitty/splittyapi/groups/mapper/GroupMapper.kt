@@ -24,4 +24,12 @@ object GroupMapper {
         joinedAt = joinedAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
         active = active
     )
+
+    fun GroupMember.toResponse(user: User) = GroupMemberResponse(
+        null,
+        userCode = user.code.toString(),
+        role = role,
+        joinedAt = joinedAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+        active = active
+    )
 }
