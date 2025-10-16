@@ -16,7 +16,7 @@ class GroupController(
 
     @PostMapping
     fun createGroup(@RequestBody request: CreateGroupRequest, @RequestParam creatorCode: String): ResponseEntity<GroupResponse> {
-        val group = groupService.createGroupByCreatorCode(request.name, UUID.fromString(creatorCode), request.description)
+        val group = groupService.createGroupByCreatorCode(request.name, UUID.fromString(creatorCode), request.description, request.currency)
         val creator = groupService.getCreatorByGroup(group)
         return ResponseEntity.status(HttpStatus.CREATED).body(group.toResponse(creator))
     }
@@ -39,7 +39,7 @@ class GroupController(
 
     @PutMapping("/{code}")
     fun updateGroup(@PathVariable code: UUID, @RequestBody request: UpdateGroupRequest): ResponseEntity<GroupResponse> {
-        val group = groupService.updateGroup(code, request.name, request.description)
+        val group = groupService.updateGroup(code, request.name, request.description, request.currency)
         val creator = groupService.getCreatorByGroup(group)
         return ResponseEntity.ok(group.toResponse(creator))
     }

@@ -20,5 +20,9 @@ data class Group(
     val description: String? = null,
 
     @Column(nullable = false)
-    val active: Boolean = true
+    val active: Boolean = true,
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 3)
+    val currency: Currency = Currency.BRL
 )

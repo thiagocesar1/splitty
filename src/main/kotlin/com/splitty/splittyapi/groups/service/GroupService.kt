@@ -1,5 +1,6 @@
 package com.splitty.splittyapi.groups.service
 
+import com.splitty.splittyapi.groups.entity.Currency
 import com.splitty.splittyapi.groups.entity.Group
 import com.splitty.splittyapi.groups.entity.GroupMember
 import com.splitty.splittyapi.groups.entity.GroupRole
@@ -19,13 +20,14 @@ class GroupService(
 ) {
 
     @Transactional
-    fun createGroupByCreatorCode(name: String, creatorCode: UUID, description: String? = null): Group {
+    fun createGroupByCreatorCode(name: String, creatorCode: UUID, description: String? = null, currency: Currency = Currency.BRL): Group {
         val creator = userRepository.findByCodeAndActive(creatorCode, true)
             .orElseThrow { NoSuchElementException("Creator user not found") }
 
         val group = Group(
             name = name,
-            description = description
+            description = description,
+            currency = currency
         )
         val savedGroup = groupRepository.save(group)
 
@@ -57,11 +59,12 @@ class GroupService(
         }
     }
 
-    fun updateGroup(code: UUID, name: String, description: String? = null): Group {
+    fun updateGroup(code: UUID, name: String, description: String? = null, currency: Currency? = null): Group {
         val group = findGroupByCode(code)
         val updatedGroup = group.copy(
             name = name,
-            description = description
+            description = description,
+            currency = currency ?: group.currency
         )
         return groupRepository.save(updatedGroup)
     }

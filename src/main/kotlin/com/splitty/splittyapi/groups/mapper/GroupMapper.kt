@@ -14,7 +14,8 @@ object GroupMapper {
         name = name,
         creatorCode = creator.code.toString(),
         description = description,
-        active = active
+        active = active,
+        currency = currency
     )
 
     fun GroupMember.toResponse(group: Group, user: User) = GroupMemberResponse(
