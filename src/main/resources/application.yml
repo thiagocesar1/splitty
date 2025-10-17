@@ -2,12 +2,23 @@ spring:
   application:
     name: splittyapi
   datasource:
-    url: jdbc:postgresql://localhost:5432/splitty-db
-    username: splitty_admin
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/splitty
+    username: splitty
+    password: splitty123
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
-
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: splitty
+    password: splitty123
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 3000
+          max-attempts: 3
+          multiplier: 2
